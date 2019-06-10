@@ -58,6 +58,25 @@ class FundingResearchFact(Base):
     date_id = Column('date_id', ForeignKey('date.date_id'))
     each_funding = Column('total_funding', Float())
 
+class publication(Base):
+    __tablename__ = 'publication'
+    publication_id = Column('publication_id', Integer, autoincrement=True, primary_key=True)
+    title = Column('title', String())
+    abstract = Column('abstract', String())
+    publication_date = Column('publication_date', Date())
+
+class journal(Base):
+    __tablename__ = 'journal'
+    journal_id = Column('journal_id', Integer, autoincrement=True, primary_key=True)
+    journal_name = Column('journal_name', String())
+
+class citation(Base):
+    __tablename__ = 'citation'
+    paper_id = Column('paper_id', Integer, autoincrement=True, primary_key=True)
+    journal_name = Column('journal_name', String())
+    citation_count = Column('citation_count', Integer())
+    calendar_year = Column('calendar_year', Integer())
+
 
 if __name__ == '__main__':
     Base.metadata.create_all(engine)
