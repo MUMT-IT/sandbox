@@ -56,6 +56,9 @@ class FundingResearchFact(Base):
     staff_id = Column('staff_id', ForeignKey('staff.staff_id'))
     department_id = Column('department_id', ForeignKey('department.department_id'))
     date_id = Column('date_id', ForeignKey('date.date_id'))
+    publication_id = Column('publication_id', ForeignKey('publication.publication_id'))
+    journal_id = Column('journal_id', ForeignKey('journal.journal_id'))
+    citation_id = Column('citation_id', ForeignKey('citation.id'))
     each_funding = Column('total_funding', Float())
 
 class publication(Base):
@@ -72,10 +75,12 @@ class journal(Base):
 
 class citation(Base):
     __tablename__ = 'citation'
-    paper_id = Column('paper_id', Integer, autoincrement=True, primary_key=True)
+    id = Column('id', Integer, autoincrement=True, primary_key=True)
+    paper_id = Column('paper_id', Integer())
     journal_name = Column('journal_name', String())
     citation_count = Column('citation_count', Integer())
-    calendar_year = Column('calendar_year', Integer())
+    last_update_date = Column('last_update_date', Date())
+    current = Column('current', Boolean, default=False)
 
 
 if __name__ == '__main__':
