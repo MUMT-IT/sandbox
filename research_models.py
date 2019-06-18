@@ -23,6 +23,7 @@ class Staff(Base):
     work_position = Column ('work_position', String())
     academic_position = Column ('academic_positopn', String())
     startdate = Column('startdate', Date())
+    retire_date = Column('retire_date', Date())
     graduate_degree = Column('graduate_degree', String())
     graduate_country = Column('graduate_country', String())
 
