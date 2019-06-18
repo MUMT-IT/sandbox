@@ -20,6 +20,12 @@ class Staff(Base):
     staff_firstname = Column('staff_firstname', String())
     staff_lastname = Column('staff_lastname', String())
     staff_email = Column('staff_email', String())
+    work_position = Column ('work_position', String())
+    academic_position = Column ('academic_positopn', String())
+    startdate = Column('startdate', Date())
+    graduate_degree = Column('graduate_degree', String())
+    graduate_country = Column('graduate_country', String())
+
 
 
 class Department(Base):
