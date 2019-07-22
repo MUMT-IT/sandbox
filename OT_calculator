@@ -1,0 +1,23 @@
+from datetime import datetime
+
+set_in = '08:30'
+set_out = '16:30'
+FMT = '%H:%M'
+
+real_in = raw_input("punch in (XX:XX) ")
+if real_in >= set_in :
+    print ("Work on time/ late")
+else:
+    ot_morning = datetime.strptime(set_in, FMT) - datetime.strptime(real_in, FMT)
+    print (ot_morning)
+real_out = raw_input("punch out (XX:XX) ")
+if real_out <= set_out :
+    print ("Get off early/ on time")
+else:
+    ot_evening = datetime.strptime(real_out, FMT) - datetime.strptime(set_out, FMT)
+    print (ot_evening)
+
+
+
+
+
