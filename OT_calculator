@@ -1,30 +1,35 @@
-#-*- coding:utf-8 -*-
-
 from datetime import datetime
-from pandas import read_excel
-set_in = '08:30'
-set_out = '16:30'
-FMT = '%H:%M'
+import pandas as pd
+set_in = '2019-07-18 08:30:00'
+set_out = '2019-07-18 16:30:00'
+FMT = '%Y-%m-%d %H:%M:%S'
 
+log = pd.read_excel('/Users/nut/Desktop/work_time.xlsx')
 
 def calculate():
-    real_in = raw_input("punch in (XX:XX) ")
-    if real_in >= set_in : #
-        print ("Work on time/ late")
-    else:
-        ot_morning = datetime.strptime(set_in, FMT) - datetime.strptime(real_in, FMT)
-        print (ot_morning)
-    real_out = raw_input("punch out (XX:XX) ")
-    if real_out <= set_out :
-        print ("Get off early/ on time")
-    else:
-        ot_evening = datetime.strptime(real_out, FMT) - datetime.strptime(set_out, FMT)
-        print (ot_evening)
+    for i in log.index:
+        print ('ID : %i' %log['id'][i])
+        #print ((log['checkin']))
+        checkin = log['checkin'][i]
+        dtype_set_in = datetime.strptime(set_in,FMT)
+        if checkin >= dtype_set_in :
+            print ('Work on time/ late')
+        else:
+            ot = dtype_set_in - checkin
+            print ('Overtime (In the morning): %s' %ot)
+            #print (ot)
+        checkout = log['checkout'][i]
+        dtype_set_out = datetime.strptime(set_out, FMT)
+        if checkout <= dtype_set_out :
+            print ('Get off early/ on time')
+        else:
+            ot = checkout - dtype_set_out
+            print ('Night work overtime: %s' %ot)
+            #print (ot)
 
 
 if __name__ == '__main__':
     calculate()
-
 # yyyy-mm-dd HH:MM:SS
 
 
