@@ -1,10 +1,22 @@
 from datetime import datetime
+import time
 import pandas as pd
+start_time = time.time() # measure execution time
 set_in = '2019-07-18 08:30:00'
 set_out = '2019-07-18 16:30:00'
 FMT = '%Y-%m-%d %H:%M:%S'
 
 log = pd.read_excel('/Users/nut/Desktop/work_time.xlsx')
+
+def readdate(): #read only same date for case of multi-datetime from excel
+    firstrow = str(log['checkin'][0])[:10]
+    for i in log.index:
+        getdate = str(log['checkin'][i])[:10]
+        #print (str(getdate)[:10])
+        if getdate == firstrow:
+            print ('Same day')
+        else:
+            print ('Different date time')
 
 def calculate():
     for i in log.index:
@@ -13,23 +25,23 @@ def calculate():
         checkin = log['checkin'][i]
         dtype_set_in = datetime.strptime(set_in,FMT)
         if checkin >= dtype_set_in :
-            print ('Work on time/ late')
+            print ('Work on time/late')
         else:
             ot = dtype_set_in - checkin
-            print ('Overtime (In the morning): %s' %ot)
-            #print (ot)
+            print ('Work early (overtime): %s' %ot)
         checkout = log['checkout'][i]
         dtype_set_out = datetime.strptime(set_out, FMT)
         if checkout <= dtype_set_out :
-            print ('Get off early/ on time')
+            print ('Get off early/on time')
         else:
             ot = checkout - dtype_set_out
             print ('Night work overtime: %s' %ot)
             #print (ot)
 
-
 if __name__ == '__main__':
-    calculate()
+    #calculate()
+    readdate()
+    print("--- %s seconds ---" % (time.time() - start_time))
 # yyyy-mm-dd HH:MM:SS
 
 
