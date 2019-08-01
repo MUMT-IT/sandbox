@@ -2,9 +2,9 @@ from datetime import datetime
 import time
 import pandas as pd
 start_time = time.time() # measure execution time
-set_in = '2019-07-18 08:30:00'
-set_out = '2019-07-18 16:30:00'
-FMT = '%Y-%m-%d %H:%M:%S'
+setin = '08:30:00'
+setout = '16:30:00'
+F = '%H:%M:%S'
 
 log = pd.read_excel('/Users/nut/Desktop/work_time.xlsx')
 
@@ -17,30 +17,51 @@ def readdate(): #read only same date for case of multi-datetime from excel
             print ('Same day')
         else:
             print ('Different date time')
+            
+def checkdate():
+    for i in log.index:
+        datein = str(log['checkin'][i])[:10]
+        dateout = str(log['checkout'][i])[:10]
+        if datein == dateout :
+            #print ('Same')
+            calculate()
+        else:
+            print ('Warning: check-in and check out date are different')
 
 def calculate():
     for i in log.index:
         print ('ID : %i' %log['id'][i])
         #print ((log['checkin']))
-        checkin = log['checkin'][i]
-        dtype_set_in = datetime.strptime(set_in,FMT)
-        if checkin >= dtype_set_in :
+        checkin = log['checkin'][i] #get checkin data
+        s1 = checkin.strftime(F) #datetime to string type
+        t_checkin = datetime.strptime(s1, F) #string to datetime type because can't let datetime minus datetime
+        dtype_set_in = datetime.strptime(setin,F)
+        if t_checkin >= dtype_set_in :
             print ('Work on time/late')
         else:
-            ot = dtype_set_in - checkin
+            ot = dtype_set_in - t_checkin
             print ('Work early (overtime): %s' %ot)
-        checkout = log['checkout'][i]
-        dtype_set_out = datetime.strptime(set_out, FMT)
-        if checkout <= dtype_set_out :
+        checkout = log['checkout'][i]  # get checkout data
+        s2 = checkout.strftime(F)  # datetime to string type
+        t_checkout = datetime.strptime(s2, F)  # string to datetime type because can't let datetime minus datetime
+        dtype_set_out = datetime.strptime(setout, F)
+        if t_checkout <= dtype_set_out:
             print ('Get off early/on time')
         else:
-            ot = checkout - dtype_set_out
+            ot = t_checkout - dtype_set_out
             print ('Night work overtime: %s' %ot)
-            #print (ot)
+def test():
+    for i in log.index:
+        a = log['checkin'][i]
+        b = a.strftime(F)
+        ti = datetime.strptime(setin, F) - datetime.strptime(b, F)
+        print ti
 
 if __name__ == '__main__':
-    #calculate()
-    readdate()
+    calculate()
+    #readdate()
+    #checkdate()
+    #test()
     print("--- %s seconds ---" % (time.time() - start_time))
 # yyyy-mm-dd HH:MM:SS
 
