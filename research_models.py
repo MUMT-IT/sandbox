@@ -20,6 +20,13 @@ class Staff(Base):
     staff_firstname = Column('staff_firstname', String())
     staff_lastname = Column('staff_lastname', String())
     staff_email = Column('staff_email', String())
+    work_position = Column ('work_position', String())
+    academic_position = Column ('academic_positopn', String())
+    startdate = Column('startdate', Date())
+    retire_date = Column('retire_date', Date())
+    graduate_degree = Column('graduate_degree', String())
+    graduate_country = Column('graduate_country', String())
+
 
 
 class Department(Base):
@@ -56,7 +63,29 @@ class FundingResearchFact(Base):
     staff_id = Column('staff_id', ForeignKey('staff.staff_id'))
     department_id = Column('department_id', ForeignKey('department.department_id'))
     date_id = Column('date_id', ForeignKey('date.date_id'))
+    publication_id = Column('publication_id', ForeignKey('publication.id'))
+    journal_id = Column('journal_id', ForeignKey('journal.id'))
+    citation_id = Column('citation_id', ForeignKey('citation.id'))
     each_funding = Column('total_funding', Float())
+
+class publication(Base):
+    __tablename__ = 'publication'
+    id = Column('id', Integer, autoincrement=True, primary_key=True)
+    title = Column('title', String())
+    abstract = Column('abstract', String())
+    publication_date = Column('publication_date', Date())
+
+class journal(Base):
+    __tablename__ = 'journal'
+    id = Column('id', Integer, autoincrement=True, primary_key=True)
+    name = Column('name', String())
+
+class citation(Base):
+    __tablename__ = 'citation'
+    id = Column('id', Integer, autoincrement=True, primary_key=True)
+    publication_id = Column('publication_id', ForeignKey('publication.id'))
+    citation_count = Column('citation_count', Integer())
+    last_update_date = Column('last_update_date', ForeignKey('Date.date_id'))
 
 
 if __name__ == '__main__':
