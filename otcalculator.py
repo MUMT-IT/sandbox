@@ -1,4 +1,7 @@
-from datetime import datetime, timedelta
+import sys
+import math
+import numpy as np
+from datetime import datetime, timedelta, time
 import time
 import pandas as pd
 import numpy as np
@@ -6,6 +9,7 @@ start_time = time.time() # measure execution time
 F = '%H:%M:%S'
 D = '%y-%m-%d'
 
+'''
 def readdate(): #read only same date for case of multi-datetime from excel
     log = pd.read_excel('work_time.xlsx')
     firstrow = str(log['checkin'][0])[:10]
@@ -16,9 +20,16 @@ def readdate(): #read only same date for case of multi-datetime from excel
             print ('Same day')
         else:
             print ('Different date time')
+'''
 
-def readdata():
-    log = pd.read_excel('work_time.xlsx')
+
+def read_data(exel_file):
+    """Read data from a given excel file.
+
+    excel_file: a filename
+    """
+
+    log = pd.read_excel(exel_file)
     log.dropna(inplace = True)
     checkin = log['checkin']
     checkout = log['checkout']
@@ -42,10 +53,12 @@ def checkd(checkin,checkout):
     #d = dout.isin(din)
     equaldate = din.eq(dout)
     #for i in din:
-    #return equaldate
+    return equaldate
 
-def caltime(checkin,checkout,equaldate):
+
+def caltime(checkin_date,checkout_date):
     print  equaldate
+
 
 def checkdate():
     log = pd.read_excel('work_time.xlsx')
@@ -145,10 +158,48 @@ def caldate(checkin, checkout, setin='08:30:00', setout='16:30:00'):
         return ('Check out date less than check in date')
 
 
+def calculate_work_hours(checkin_times, checkout_times):
+    return calculate_ot_hours(checkin_times, checkout_times)
+
+
+def create_datetime(row, hour, minute, second=0):
+    return datetime(row.year, row.month, row.day,
+                    hour, minute, second)
+
+
+def round_hours(deltahour):
+    if deltahour >= 0:
+        return math.floor(deltahour)
+    else:
+        return math.floor(abs(deltahour)) * -1
+
+
+def calculate_ot_hours(scantimes,
+                       check_hour,
+                       check_minute,
+                       check_second=0):
+    """Calculate OT hours for same date.
+
+    scantimes: Series of check-in times
+    check_hour: hour
+    check_minute: minute
+    check_second: second
+    return: Data frame of OT hours
+    """
+    checktimes = scantimes.apply(create_datetime, args=[
+        check_hour, check_minute, check_second
+    ])
+    ot_time = scantimes - checktimes
+    ot_hours = ot_time/pd.Timedelta(hours=1)
+    return ot_hours.apply(round_hours)
+
+
+
 if __name__ == '__main__':
     #caldate()
     #readdata()
-    checkin,checkout = readdata()
+    excel_file = sys.args[1]
+    checkin,checkout = read_data(excel_file)
     checkd(checkin,checkout)
     #equaldate = checkd(checkin,checkout)
     #caltime(checkin,checkout,equaldate)
