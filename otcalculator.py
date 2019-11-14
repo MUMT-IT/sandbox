@@ -68,33 +68,31 @@ def calculate_ot (work_hours, ot_schedule):
 
 
 def calculate_ot_time(chkin, chkout, shiftstart, shiftend):
-    chkin = datetime.strptime(chkin,F)
-    shiftstart = datetime.strptime(shiftstart, F)
-    chkout = datetime.strptime(chkout, F)
-    shiftend = datetime.strptime(shiftend, F)
+    #chkin = datetime.strptime(chkin,F)
+    #shiftstart = datetime.strptime(shiftstart, F)
+    #chkout = datetime.strptime(chkout, F)
+    #shiftend = datetime.strptime(shiftend, F)
     if shiftstart >= chkin:
         if chkout >= shiftend: #checkin before and checkout after OT set time
             ot = shiftend - shiftstart
             ot_minute = ot.seconds / 60
-            print ot_minute
+            return ot_minute
         else: #checkin before shiftstart but checkout before shiftend
             ot = chkout - shiftstart
             ot_minute = ot.seconds / 60
-            print ot_minute
+            return ot_minute
     else: #checkin after shiftstart
         if chkout >= shiftend:  #checkin after shiftstart but checkout after shiftend
             ot = shiftend - chkin
             ot_minute = ot.seconds / 60
-            print ot_minute
+            return ot_minute
         else: #checkin after shiftstart and checkout before shiftend
             ot = chkout - chkin
             ot_minute = ot.seconds / 60
-            print ot_minute
-    #return 180
-
+            return ot_minute
 if __name__ == '__main__':
-    #excel_file = read_data('/Users/nut/Desktop/reportworktime.xls')
-    #work_hours = calculate_work_hours(excel_file)
-    #workhourstatus('09:00:00', '16:00:00',work_hours)
-    #excel_file = read_schedule('/Users/nut/Desktop/workschedule.xls')
-    calculate_ot_time(chkin='05:30:00', chkout='9:59:00', shiftstart='06:00:00', shiftend='09:00:00')
+    calculate_ot_time(chkin='06:00:00', chkout='9:30:00', shiftstart='06:00:00', shiftend='09:00:00')
+    # excel_file = read_data('/Users/nut/Desktop/reportworktime.xls')
+    # work_hours = calculate_work_hours(excel_file)
+    # workhourstatus('09:00:00', '16:00:00',work_hours)
+    # excel_file = read_schedule('/Users/nut/Desktop/workschedule.xls')
