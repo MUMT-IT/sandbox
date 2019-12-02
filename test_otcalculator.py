@@ -41,6 +41,12 @@ def test_round_hour_negative():
     assert round_hours(-0.5) == 0
     assert round_hours(-1.4) == -1
 
+def test_round_hour_positive():
+    assert round_hours(0.5) == 0
+    assert round_hours(1.4) == 1
+    assert round_hours(0.1) == 0
+    assert round_hours(11.56) == 11
+
 
 def test_calculate_ot_one_hour_early():
     t1 = datetime(2019,8,22,7,30,0)
@@ -60,6 +66,13 @@ def test_calculate_ot_one_hour_late():
 
 def test_calculate_ot_40min_early():
     t1 = datetime(2019,8,22,7,50,0)
+    t2 = datetime(2019,8,22,9,30,0)
+    scantimes = pd.Series([t1, t2])
+    ot_hours = calculate_ot_hours(scantimes, 8,30)
+    assert ot_hours[0] == 0
+
+def test_calculate_ot_40min_late():
+    t1 = datetime(2019,8,22,9,10,0)
     t2 = datetime(2019,8,22,9,30,0)
     scantimes = pd.Series([t1, t2])
     ot_hours = calculate_ot_hours(scantimes, 8,30)
