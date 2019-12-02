@@ -4,12 +4,11 @@ import numpy as np
 from datetime import datetime, timedelta, time
 import time
 import pandas as pd
-F = '%H:%M:%S'
 
 """Read data from a given excel file.
     excel_file: a filename
     """
-def read_data(exel_file):
+def read_data(exel_file): #read checkin/out data
     df = pd.read_excel(exel_file)
     return df
 
@@ -47,17 +46,7 @@ def workhourstatus (setin, setout,work_hours):
     work_hours['chkout_status'] = work_hours.chkout.apply(lambda x: 'on time' if x > setout else 'Early')
     return work_hours
 
-
-def write_to_excel(df):
-    export_excel =df.to_excel(r'/Users/nut/Desktop/ot_result.xls',header=True)
-    return export_excel
-
-
-def read_schedule(excel_work_file):
-    df = pd.read_excel(excel_work_file)
-    return df
-
-
+'''
 def calculate_ot (work_hours, ot_schedule):
     work_hours = read_data()
     ot_schedule = read_schedule()
@@ -67,7 +56,28 @@ def calculate_ot (work_hours, ot_schedule):
     df1.Product.apply(lambda x: df2.AttrName[df2.ProdDetail.str.contains(x)], 1)
 
 
+def checkd(checkin,checkout):
+    din = checkin.dt.date
+    dout = checkout.dt.date
+    #d = din.equals(dout)
+    #d = dout.isin(din)
+    equaldate = din.eq(dout)
+    #for i in din:
+    return equaldate
+'''
+def read_ot_data(ot_file): #read ot data
+    df = pd.read_excel(ot_file)
+    if df['ID'] == read_data['ID']:
+        return df
+    else:
+        return None
+
+
 def calculate_ot_time(chkin, chkout, shiftstart, shiftend):
+    #chkin = calculate_work_hours.cleaned_df['chkin']
+    #chkout = calculate_work_hours.cleaned_df['chkout']
+    #shiftstart = read_ot_data.df['shiftstart']
+    #shiftend = read_ot_data.df['shiftend']
     #chkin = datetime.strptime(chkin,F)
     #shiftstart = datetime.strptime(shiftstart, F)
     #chkout = datetime.strptime(chkout, F)
@@ -80,18 +90,41 @@ def calculate_ot_time(chkin, chkout, shiftstart, shiftend):
         else: #checkin before shiftstart but checkout before shiftend
             ot = chkout - shiftstart
             ot_minute = ot.seconds / 60
-            return ot_minute
+            return ot_minute == '0' #not calculate OT
     else: #checkin after shiftstart
         if chkout >= shiftend:  #checkin after shiftstart but checkout after shiftend
             ot = shiftend - chkin
             ot_minute = ot.seconds / 60
-            return ot_minute
+            return ot_minute == '0' #not calculate OT
         else: #checkin after shiftstart and checkout before shiftend
             ot = chkout - chkin
             ot_minute = ot.seconds / 60
-            return ot_minute
+            return ot_minute == '0' #not calculate OT
+
+
+def ot_is_count_hour(ot_type): #find
+    #ot_type = read_ot_data.df['ot_type']
+    if ot_type == 'hourlyworkday' or ot_type == 'hourlyholiday':
+        type = 'counthour'
+        return type
+    else:
+        return None
+
+
+def cal_ot(ot_cal_type,rate,ot_minute):
+    #rate = read_ot_data.df['rate']
+    #ot_cal_type = ot_is_count_hour.type
+    if ot_cal_type == 'counthour':
+        ot = rate*(ot_minute/60)
+        return ot
+    else:
+        ot = rate
+        return ot
+
+
 if __name__ == '__main__':
-    calculate_ot_time(chkin='06:00:00', chkout='9:30:00', shiftstart='06:00:00', shiftend='09:00:00')
+    ot_is_count_hour()
+    #calculate_ot_time(chkin='07:00:00', chkout='8:15:00', shiftstart='06:00:00', shiftend='09:00:00')
     # excel_file = read_data('/Users/nut/Desktop/reportworktime.xls')
     # work_hours = calculate_work_hours(excel_file)
     # workhourstatus('09:00:00', '16:00:00',work_hours)
